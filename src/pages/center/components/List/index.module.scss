@@ -1,10 +1,18 @@
 .container {
   width: 100%;
   margin-top: 60px;
-
-  .item {
-    margin-top: 10px;
-    padding: 30px;
+  .btn {
+    width: 100%;
+    background-color: transparent;
+    border: transparent;
     border-bottom: 1px solid #346fc2;
+    padding: 0;
+    .shareItem {
+      width: 100%;
+      font-size: 32px;
+      padding: 15px 30px;
+      text-align: left;
+      background-color: transparent;
+    }
   }
 }

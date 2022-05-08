@@ -1,8 +1,8 @@
-import {Component} from 'react';
-import Taro from '@tarojs/taro';
-import {View, Text} from '@tarojs/components';
-import List from './components/List';
-import styles from './index.module.scss';
+import { Component } from "react";
+import Taro from "@tarojs/taro";
+import { View, Text, Image } from "@tarojs/components";
+import List from "./components/List";
+import styles from "./index.module.scss";
 
 interface UserInfo {
   avatarUrl?: string;
@@ -16,13 +16,13 @@ interface IState {
 export default class Index extends Component<null, IState> {
   constructor(props) {
     super(props);
-    this.state = {userInfo: {}};
+    this.state = { userInfo: {} };
   }
 
   componentWillMount() {
-    Taro.setNavigationBarTitle({title:'个人中心'})
+    Taro.setNavigationBarTitle({ title: "个人中心" });
     Taro.getStorage({
-      key: 'userInfo',
+      key: "userInfo",
       success: (res) => {
         console.log(res?.data);
         this.setState({
@@ -31,32 +31,41 @@ export default class Index extends Component<null, IState> {
       },
       fail: () => {
         Taro.showToast({
-          title: '请先登录',
-          icon: 'none',
+          title: "请先登录",
+          icon: "none",
           duration: 2000,
         });
       },
     });
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
-  componentWillUnmount() {
-  }
-
+  componentWillUnmount() {}
 
   render() {
-    const {userInfo} = this.state;
+    const { userInfo } = this.state;
     return (
       <View className={styles.container}>
-        {/* <AtAvatar circle size="large" image={userInfo?.avatarUrl}/> */}
+        <Image
+          style={{
+            width: "60px",
+            height: "60px",
+            background: "#fff",
+            borderRadius: "50%",
+          }}
+          src={userInfo?.avatarUrl}
+        ></Image>
         <Text className={styles.nickName}>{userInfo?.nickName}</Text>
         <View className={styles.count}>
-          <View className={styles.item}>记账天数<Text className={styles.text}>10</Text></View>
-          <View className={styles.item}>记账笔数<Text className={styles.text}>40</Text></View>
+          <View className={styles.item}>
+            记账天数<Text className={styles.text}>10</Text>
+          </View>
+          <View className={styles.item}>
+            记账笔数<Text className={styles.text}>40</Text>
+          </View>
         </View>
-        <List/>
+        <List />
       </View>
     );
   }

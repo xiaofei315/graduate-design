@@ -11,8 +11,6 @@ class Line extends Component<IProps> {
   Line: any;
 
   componentDidMount() {
-    console.log(this.props.data);
-
     setTimeout(() => {
       this.refresh();
     }, 10);
@@ -38,7 +36,8 @@ class Line extends Component<IProps> {
       series: [
         {
           type: "pie",
-          radius: ["20%", "40%"],
+          // radius: ["20%", "40%"],
+          radius: "40%",
           data: this.props.data,
           label: {
             normal: {

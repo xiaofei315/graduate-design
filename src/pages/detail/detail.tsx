@@ -31,7 +31,7 @@ const Index = () => {
     Taro.showToast({
       title:'加载中...',
       icon: 'loading',
-      duration:1000,
+      duration:500,
     })
     Taro.cloud.callFunction({
       name: 'selectRecords',

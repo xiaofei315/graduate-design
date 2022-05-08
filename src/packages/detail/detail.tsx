@@ -1,4 +1,4 @@
-import { Input, Picker, View } from "@tarojs/components";
+import { Input, Picker, View, Map } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import cn from "classnames";
 import { ILocation } from "@/context/addContext";
@@ -15,8 +15,6 @@ const Index = () => {
   const [location, setLocation] = useState<ILocation>();
   const [date, setDate] = useState(dayjs().format("MM-DD"));
   const [time, setTime] = useState(dayjs().format("HH:mm"));
-
-  useNavigatorText("详情");
 
   const init = () => {
     const openid = Taro.getStorageSync("openid");
@@ -37,6 +35,7 @@ const Index = () => {
   useEffect(() => {
     init();
   }, []);
+  useNavigatorText("记录详情");
 
   const handleclick = () => {
     if (disabled) {
@@ -104,7 +103,7 @@ const Index = () => {
           <Input
             className={styles.input}
             placeholder="金额"
-            value={String(data && data.amount) || '0' + "元"}
+            value={String(data && data.amount) || "0" + "元"}
             disabled={disabled}
           />
         </View>
@@ -128,13 +127,25 @@ const Index = () => {
             <View>{data?.time}</View>
           </Picker>
         </View>
+
+        <View className={styles.item}>
+          <View className={styles.title}>备注:</View>
+          <Input
+            className={styles.input}
+            placeholder="备注"
+            value={data && data.desc}
+            disabled={disabled}
+          />
+        </View>
         <View className={styles.item}>
           <View className={styles.title}>地点:</View>
           <View className={styles.input} onClick={handleLocation}>
-            {location?.name || (data && data?.location?.name)}
+            {location?.name ||
+              (data && (data?.location?.name || data?.location?.address))}
           </View>
         </View>
       </View>
+
       <View className={cn(styles.btnWrap, { [styles.active]: !disabled })}>
         {!disabled ? (
           <View
@@ -154,6 +165,23 @@ const Index = () => {
         >
           提交
         </View>
+      </View>
+
+      <View className={styles.mapContainer}>
+        <Map
+          className={styles.map}
+          latitude={Number(data?.location?.latitude)}
+          longitude={Number(data?.location?.longitude)}
+          markers={[
+            {
+              id: 0,
+              iconPath: "",
+              latitude: Number(data?.location?.latitude),
+              longitude: Number(data?.location?.longitude),
+              title: data?.location?.name || data?.location?.address,
+            },
+          ]}
+        />
       </View>
     </View>
   );

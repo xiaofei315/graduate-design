@@ -18,6 +18,7 @@
 
 .container {
   width: 100%;
+  height: 100vh;
   .content {
     width: 100%;
 
@@ -27,8 +28,15 @@
       display: flex;
       align-items: center;
       margin: 10px auto;
-      border-bottom: 3px solid #ccc;
       position: relative;
+      &::after {
+        content: "";
+        width: 100%;
+        height: 2px;
+        position: absolute;
+        bottom: 0;
+        box-shadow: 2px 2px 2px #b8f1ed;
+      }
 
       .title {
         width: 110px;
@@ -48,26 +56,42 @@
   .btnWrap {
     width: 100%;
     height: 80px;
-    margin-top: 30px;
+    margin: 30px auto;
     position: relative;
     .edit {
       @include btn;
       z-index: 1000;
       background-color: #f1f1b8;
+      box-shadow: 0 0 15px #f1f1b8;
+
       &.active {
         background-color: #b8f1ed;
         transform: translateX(-110%);
+        box-shadow: 0 0 15px #b8f1ed;
         @include transition;
       }
     }
     .submit {
       @include btn;
       background-color: #f1b8e4;
+      box-shadow: 0 0 15px #f1b8e4;
       transform: translateX(-50%);
       &.active {
         transform: translateX(15%);
         @include transition;
       }
+    }
+  }
+  .mapContainer {
+    width: 95%;
+    height: 580px;
+    margin: 20px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 15px #b8f1ed;
+    .map {
+      width: 100%;
+      height: 100%;
     }
   }
 }
