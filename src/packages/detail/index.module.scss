@@ -1,0 +1,73 @@
+@mixin transition {
+  transition: all 0.2s linear;
+}
+
+@mixin btn {
+  width: 33%;
+  padding: 20px 0;
+  border-radius: 20px;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  @include transition;
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+.container {
+  width: 100%;
+  .content {
+    width: 100%;
+
+    .item {
+      width: 100%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      margin: 10px auto;
+      border-bottom: 3px solid #ccc;
+      position: relative;
+
+      .title {
+        width: 110px;
+        text-align: right;
+        margin-right: 10px;
+        font-weight: bold;
+      }
+      .input {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .btnWrap {
+    width: 100%;
+    height: 80px;
+    margin-top: 30px;
+    position: relative;
+    .edit {
+      @include btn;
+      z-index: 1000;
+      background-color: #f1f1b8;
+      &.active {
+        background-color: #b8f1ed;
+        transform: translateX(-110%);
+        @include transition;
+      }
+    }
+    .submit {
+      @include btn;
+      background-color: #f1b8e4;
+      transform: translateX(-50%);
+      &.active {
+        transform: translateX(15%);
+        @include transition;
+      }
+    }
+  }
+}

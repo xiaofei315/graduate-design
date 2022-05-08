@@ -1,0 +1,55 @@
+{
+  "name": "info",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "templateInfo": {
+    "name": "default",
+    "typescript": true,
+    "css": "sass"
+  },
+  "scripts": {
+    "build:weapp": "taro build --type weapp",
+    "dev:weapp": "npm run build:weapp -- --watch"
+  },
+  "browserslist": [
+    "last 3 versions",
+    "Android >= 4.1",
+    "ios >= 8"
+  ],
+  "author": "",
+  "dependencies": {
+    "@babel/runtime": "^7.7.7",
+    "@rematch/core": "^2.2.0",
+    "@tarojs/components": "3.4.7",
+    "@tarojs/plugin-framework-react": "3.4.7",
+    "@tarojs/react": "3.4.7",
+    "@tarojs/runtime": "3.4.7",
+    "@tarojs/taro": "3.4.7",
+    "classnames": "^2.3.1",
+    "dayjs": "^1.11.2",
+    "echarts-taro3-react": "^1.0.13",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-redux": "^8.0.1",
+    "redux": "^4.2.0",
+    "redux-thunk": "^2.4.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.0",
+    "@tarojs/mini-runner": "3.4.7",
+    "@tarojs/webpack-runner": "3.4.7",
+    "@types/react": "^17.0.2",
+    "@types/webpack-env": "^1.13.6",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "babel-preset-taro": "3.4.7",
+    "eslint": "^8.12.0",
+    "eslint-config-taro": "3.4.7",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-react": "^7.8.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "stylelint": "^14.4.0",
+    "typescript": "^4.1.0"
+  }
+}

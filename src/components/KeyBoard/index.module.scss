@@ -1,0 +1,85 @@
+.container {
+  position: fixed;
+  bottom: 0px;
+  width: 100vw;
+  height: 700px;
+  background-color: white;
+
+  .address {
+    margin-left: 20px;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  .desc {
+    width: 100%;
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    border-bottom: 1px solid #346fc2;
+
+    .input {
+      flex: 1;
+      margin-left: 20px;
+      text-align: left;
+    }
+  }
+
+  .valueWrap {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    align-items: center;
+    border-bottom: 1px solid #346fc2;
+
+    .amount {
+      width: 50%;
+      text-align: left;
+      margin-left: 20px;
+    }
+
+    .btn {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #346fc2;
+      border-radius: 5px;
+
+      &:active {
+        background-color: rgba(52, 111, 194, 0.1);
+        box-shadow: 0 0 20px #346fc2;
+      }
+    }
+
+    .value {
+      width: 30%;
+      text-align: center;
+      margin-left: 20px;
+    }
+  }
+
+  .keyBoard {
+    position: absolute;
+    z-index: 1000;
+    bottom: constant(safe-area-inset-bottom);
+    bottom: env(safe-area-inset-bottom);
+    width: 100%;
+    //height: 100%;
+    height: 450px;
+    display: flex;
+    flex-wrap: wrap;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      width: 100%;
+      height: 1px;
+      background-color: #0d5cca;
+    }
+  }
+}
