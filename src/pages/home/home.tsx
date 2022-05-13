@@ -1,38 +1,94 @@
-import {useState} from 'react';
-import {View, Text, Picker} from '@tarojs/components';
-import {useNavigatorText} from "@/hooks/useNavigatorText";
-import styles from './index.module.scss';
+import { View } from "@tarojs/components";
+import { useState, useContext, useEffect } from "react";
+import ItemList from "@/components/ItemList";
+import cn from "classNames";
+
+import { costType, incoming, IItem } from "@/constants/enums";
+import { addContext, initialData } from "@/context/addContext";
+import KeyBoard from "@/components/KeyBoard";
+
+import styles from "./index.module.scss";
+import { useNavigatorText } from "@/hooks/useNavigatorText";
+import Mask from "@/components/Mask";
 
 const Index = () => {
-  useNavigatorText('首页');
-  const [date, setDate] = useState('2018-04-22');
-  const [time, setTime] = useState('12:01');
-  const onTimeChange = (e) => {
-    setTime(e.detail.value);
+  useNavigatorText("首页");
+
+  const [currentTab, setCurrentTab] = useState(1);
+  const [chooseType, setChooseType] = useState<IItem>({
+    id: "",
+    type: "",
+    subType: "",
+    name: "",
+  });
+  const [mask, setMask] = useState(false);
+
+  const context = useContext(addContext);
+
+  useEffect(() => {
+    context.data = initialData;
+  }, [chooseType]);
+
+  const handleTabClick = (v: number) => {
+    setCurrentTab(v);
   };
-  const onDateChange = (e) => {
-    setDate(e.detail.value);
+
+  const handleCloseMask = () => {
+    setMask(false);
   };
+
+  const handlePaymentClick = (v: IItem) => {
+    console.log(v);
+    setChooseType(v);
+    context.data.type = v;
+    setMask(true);
+  };
+
   return (
-    <View className="index">
-      <Text className={styles.text}>首页</Text>
-      <View className="page-section">
-        <Text>时间选择器</Text>
-        <View>
-          <Picker mode="time" onChange={onTimeChange} value={''}>
-            <View className="picker">当前选择：{time}</View>
-          </Picker>
-        </View>
+    <addContext.Provider value={{ data: context.data }}>
+      <View className={styles.container}>
+        <Tab currentTab={currentTab} onClick={handleTabClick} />
+
+        {currentTab == 1 && (
+          <ItemList
+            data={costType}
+            chooseType={chooseType}
+            onClick={handlePaymentClick}
+          />
+        )}
+
+        {currentTab == 2 && (
+          <ItemList
+            data={incoming}
+            chooseType={chooseType}
+            onClick={handlePaymentClick}
+          />
+        )}
       </View>
-      <View className="page-section">
-        <Text>日期选择器</Text>
-        <View>
-          <Picker mode="date" onChange={onDateChange} value={''}>
-            <View className="picker">当前选择：{date}</View>
-          </Picker>
-        </View>
+      {mask && (
+        <Mask onClick={handleCloseMask}>
+          <KeyBoard />
+        </Mask>
+      )}
+    </addContext.Provider>
+  );
+};
+export default Index;
+
+const Tab = ({ currentTab, onClick }) => {
+  return (
+    <View
+      className={cn(styles.tabContainer, {
+        [styles.active1]: currentTab == 1,
+        [styles.active2]: currentTab == 2,
+      })}
+    >
+      <View className={styles.tabItem} onClick={() => onClick(1)}>
+        支出
+      </View>
+      <View className={styles.tabItem} onClick={() => onClick(2)}>
+        收入
       </View>
     </View>
   );
 };
-export default Index;

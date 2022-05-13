@@ -1,52 +1,38 @@
-import cn from 'classnames';
-import {Swiper, SwiperItem, View} from '@tarojs/components';
-import styles from './index.module.scss';
-import {IItem} from '@/constants/enums';
+import { ScrollView, View } from "@tarojs/components";
 
-function Index({data, chooseType, onClick}) {
-  // 分页
-  let totalPage = Math.ceil(data.length / 12);
-  let newList: IItem[][] = [];
-  for (let i = 1; i < totalPage + 1; i++) {
-    newList.push(data.slice((i - 1) * 12, i * 12));
-  }
-
+function Index({ data, chooseType, onClick }) {
   return (
-    <View className={styles.container}>
-      <Swiper
-        className={styles.swiperWrap}
-        indicatorColor="#cecece"
-        indicatorActiveColor="#346fc2"
-        indicatorDots={totalPage > 1}
+    <ScrollView
+      scrollY
+      style={{ width: "100vw", height: "200px", backgroundColor: "#b8f1ed",marginTop:'20px' }}
+    >
+      <View
+        style={{
+          width: "100%",
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+        }}
       >
-        {newList.map((list, index) => {
+        {data.map((item, index) => {
           return (
-            <SwiperItem key={index} className={styles.swiperItem}>
-              <View className={styles.listWrap}>
-                {list.map((item: IItem) => {
-                  return (
-                    <View
-                      key={item.id}
-                      className={styles.itemWrap}
-                      onClick={() => onClick(item)}
-                    >
-                      <View
-                        className={cn(styles.item, {
-                          [styles.active]: chooseType.id == item.id,
-                        })}
-                      >
-                        {item.name}
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-            </SwiperItem>
+            <View
+              key={index}
+              style={{
+                padding: "10px 0",
+                display:'flex',
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius:'20px',
+                  backgroundColor:chooseType.id===item.id?'skyblue':''
+              }}
+              onClick={() => onClick(item)}
+            >
+              {item.name}
+            </View>
           );
         })}
-      </Swiper>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
-
 export default Index;

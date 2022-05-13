@@ -96,11 +96,14 @@ class Line extends Component<IProps> {
           data: yData,
           type: "line",
           // smooth: true,
+          areaStyle: {
+            color: "#f1b8e4",
+          },
           itemStyle: {
             color: "#f65303",
           },
           lineStyle: {
-            color: "#5470c6 ",
+            color: "#f1b8e4 ",
           },
         },
       ],

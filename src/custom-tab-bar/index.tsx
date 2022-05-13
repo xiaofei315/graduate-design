@@ -83,12 +83,12 @@ const CustomTabbar = () => {
         },
       });
     } else {
-      if (currentTabbarIndex === item.id && item.id === 3) {
-        Taro.navigateTo({
-          url: '/packages/add/add',
-        });
-        return;
-      }
+      // if (currentTabbarIndex === item.id && item.id === 3) {
+      //   Taro.navigateTo({
+      //     url: '/packages/add/add',
+      //   });
+      //   return;
+      // }
 
       if (currentTabbarIndex === item.id) {
         return;

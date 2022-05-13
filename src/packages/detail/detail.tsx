@@ -1,4 +1,4 @@
-import { Input, Picker, View, Map } from "@tarojs/components";
+import { Input, Picker, View, Map, CoverView } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import cn from "classnames";
 import { ILocation } from "@/context/addContext";
@@ -7,18 +7,20 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 import styles from "./index.module.scss";
-import { IData } from "@/context/addContext";
 
 const Index = () => {
-  const [data, setData] = useState<IData>();
   const [disabled, setDisable] = useState(true);
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [desc, setDesc] = useState("");
   const [location, setLocation] = useState<ILocation>();
-  const [date, setDate] = useState(dayjs().format("MM-DD"));
-  const [time, setTime] = useState(dayjs().format("HH:mm"));
 
+  const openid = Taro.getStorageSync("openid");
+  const params = Taro.getCurrentInstance()?.router?.params;
   const init = () => {
-    const openid = Taro.getStorageSync("openid");
-    const params = Taro.getCurrentInstance()?.router?.params;
     Taro.cloud.callFunction({
       name: "selectRecordById",
       data: {
@@ -26,8 +28,13 @@ const Index = () => {
         id: params?.id,
       },
       success: (res: any) => {
-        console.log(res.result.data);
-        setData(res.result.data[0]);
+        setId(res.result.data[0]._id);
+        setName(res.result.data[0].type.name);
+        setAmount(res.result.data[0].amount);
+        setDate(res.result.data[0].date);
+        setTime(res.result.data[0].time);
+        setLocation(res.result.data[0].location);
+        setDesc(res.result.data[0].desc);
       },
     });
   };
@@ -40,7 +47,7 @@ const Index = () => {
   const handleclick = () => {
     if (disabled) {
       Taro.showToast({
-        title: "不可编辑",
+        title: "点击修改按钮",
         icon: "none",
         duration: 2000,
       });
@@ -63,47 +70,99 @@ const Index = () => {
   const handleEdit = () => {
     setDisable(false);
   };
+  const handleAmountChange = (e) => {
+    setAmount(e.detail.value);
+  };
+  const handleDescChange = (e) => {
+    setDesc(e.detail.value);
+  };
+  const handledelete = () => {
+    Taro.showLoading({
+      title: "删除中...",
+    });
+    Taro.cloud.callFunction({
+      name: "deleteRecord",
+      data: {
+        collectionName: openid,
+        id: params?.id,
+      },
+      success: () => {
+        Taro.hideLoading();
+        Taro.showToast({
+          title: "成功",
+          icon: "success",
+          duration: 2000,
+        });
+        setTimeout(() => Taro.navigateBack(), 500);
+      },
+    });
+  };
   const handleCancel = () => {
     setDisable(true);
   };
+
+  // 时间
+  const handleDateChange = (e) => {
+    setDate(() => e.detail.value);
+  };
+  const handleTimeChange = (e) => {
+    setTime(() => e.detail.value);
+  };
+
   const handleSubmit = () => {
     Taro.showModal({
       title: "提示",
       content: "是否确认提交",
       success: function (res) {
         if (res.confirm) {
-          console.log("用户点击确定");
+          const data = {
+            amount: amount,
+            date: date,
+            time: time,
+            desc: desc,
+            location: location,
+          };
+          Taro.showLoading({
+            title: "修改中...",
+          });
+          Taro.cloud.callFunction({
+            name: "editRecord",
+            data: {
+              collectionName: openid,
+              id: id,
+              data: data,
+            },
+            success: () => {
+              Taro.hideLoading();
+              Taro.showToast({
+                title: "成功",
+                icon: "success",
+                duration: 2000,
+              });
+              init();
+              setDisable(true);
+            },
+          });
         } else if (res.cancel) {
-          console.log("用户点击取消");
+          setDisable(true);
         }
       },
     });
-    console.log("完成");
-  };
-
-  // 时间
-  const handleDateChange = (e) => {
-    setDate(() => e.detail.value);
-    let mon = dayjs(e.detail.value).month() + 1;
-    let day = dayjs(e.detail.value).date();
-    console.log(mon, day);
-  };
-  const handleTimeChange = (e) => {
-    setTime(() => e.detail.value);
   };
   return (
     <View className={styles.container}>
       <View className={styles.content} onClick={handleclick}>
         <View className={styles.item}>
           <View className={styles.title}>分类:</View>
-          <View className={styles.input}>{data && data.type.name}</View>
+          <View className={styles.input}>{name}</View>
         </View>
         <View className={styles.item}>
           <View className={styles.title}>金额:</View>
           <Input
             className={styles.input}
             placeholder="金额"
-            value={String(data && data.amount) || "0" + "元"}
+            value={amount}
+            onInput={handleAmountChange}
             disabled={disabled}
           />
         </View>
@@ -115,7 +174,7 @@ const Index = () => {
             value={date}
             disabled={disabled}
           >
-            <View>{data?.date}</View>
+            <View>{date}</View>
           </Picker>
           <View>--</View>
           <Picker
@@ -124,7 +183,7 @@ const Index = () => {
             value={time}
             disabled={disabled}
           >
-            <View>{data?.time}</View>
+            <View>{time}</View>
           </Picker>
         </View>
 
@@ -133,56 +192,55 @@ const Index = () => {
           <Input
             className={styles.input}
             placeholder="备注"
-            value={data && data.desc}
+            value={desc}
+            onInput={handleDescChange}
             disabled={disabled}
           />
         </View>
         <View className={styles.item}>
           <View className={styles.title}>地点:</View>
           <View className={styles.input} onClick={handleLocation}>
-            {location?.name ||
-              (data && (data?.location?.name || data?.location?.address))}
+            {location?.name || location?.address}
           </View>
         </View>
       </View>
 
-      <View className={cn(styles.btnWrap, { [styles.active]: !disabled })}>
-        {!disabled ? (
-          <View
-            className={cn(styles.edit, { [styles.active]: !disabled })}
-            onClick={handleCancel}
-          >
-            取消
-          </View>
-        ) : (
+      {disabled ? (
+        <View className={cn(styles.btnWrap)}>
           <View className={styles.edit} onClick={handleEdit}>
             修改
           </View>
-        )}
-        <View
-          className={cn(styles.submit, { [styles.active]: !disabled })}
-          onClick={handleSubmit}
-        >
-          提交
+          <View className={styles.submit} onClick={handledelete}>
+            删除
+          </View>
         </View>
-      </View>
+      ) : (
+        <View className={styles.btnWrap}>
+          <View className={styles.edit} onClick={handleCancel}>
+            取消
+          </View>
+          <View className={styles.submit} onClick={handleSubmit}>
+            提交
+          </View>
+        </View>
+      )}
 
-      <View className={styles.mapContainer}>
+      <CoverView className={styles.mapContainer}>
         <Map
           className={styles.map}
-          latitude={Number(data?.location?.latitude)}
-          longitude={Number(data?.location?.longitude)}
+          latitude={Number(location?.latitude)}
+          longitude={Number(location?.longitude)}
           markers={[
             {
               id: 0,
               iconPath: "",
-              latitude: Number(data?.location?.latitude),
-              longitude: Number(data?.location?.longitude),
-              title: data?.location?.name || data?.location?.address,
+              latitude: Number(location?.latitude),
+              longitude: Number(location?.longitude),
+              title: location?.name || location?.address,
             },
           ]}
         />
-      </View>
+      </CoverView>
     </View>
   );
 };

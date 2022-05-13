@@ -1,9 +1,11 @@
-const cloud = require('wx-server-sdk')
+const cloud = require("wx-server-sdk");
 cloud.init({
-  env: cloud.DYNAMIC_CURRENT_ENV
-})
-const db = cloud.database()
-exports.main = async (event, context) => {
-  console.log('event:'+event.name, 'context:'+context.name);
-  return await db.createCollection('todos')
-}
+  env: cloud.DYNAMIC_CURRENT_ENV,
+});
+const db = cloud.database();
+exports.main = async (event) => {
+  return db
+    .collection(event.collectionName)
+    .doc(event.id)
+    .update({ data: event.data });
+};
