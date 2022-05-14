@@ -36,13 +36,11 @@ class Line extends Component<IProps> {
       series: [
         {
           type: "pie",
-          // radius: ["20%", "40%"],
           radius: "40%",
           data: this.props.data,
           label: {
             normal: {
               show: true,
-              // formatter: "{b}:{d}%", //模板变量有 {a}、{b}、{c}、{d}，分别表示系列名，数据名，数据值，百分比。{d}数据会根据value值计算百分比
               formatter: (args: any) => {
                 return `${args.name}:${args.value}`;
               },
