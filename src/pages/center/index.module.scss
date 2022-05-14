@@ -25,12 +25,14 @@
       .text {
         margin-left: 10px;
         color: #666;
-
       }
 
       &:first-child {
         border-right: 5px solid rgb(0, 0, 0);
       }
     }
+  }
+  .btn {
+    margin-top: 30px;
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from "react";
 import Taro from "@tarojs/taro";
-import { View, Text, Image } from "@tarojs/components";
+import { View, Text, Image, Button } from "@tarojs/components";
 import List from "./components/List";
 import styles from "./index.module.scss";
 
@@ -38,7 +38,29 @@ export default class Index extends Component<null, IState> {
       },
     });
   }
-
+  handleLogout = () => {
+    Taro.showModal({
+      title: "提示",
+      content: "是否退出登录",
+      success: function (res) {
+        if (res.confirm) {
+          // console.log('用户点击确定')
+          Taro.showLoading({
+            title: "退出中...",
+          });
+          Taro.clearStorage();
+          setTimeout(function () {
+            Taro.hideLoading();
+            Taro.reLaunch({
+              url: "/pages/home/home",
+            });
+          }, 100);
+        } else if (res.cancel) {
+          console.log("用户点击取消");
+        }
+      },
+    });
+  };
   componentDidMount() {}
 
   componentWillUnmount() {}
@@ -57,15 +79,10 @@ export default class Index extends Component<null, IState> {
           src={userInfo?.avatarUrl}
         ></Image>
         <Text className={styles.nickName}>{userInfo?.nickName}</Text>
-        <View className={styles.count}>
-          <View className={styles.item}>
-            记账天数<Text className={styles.text}>10</Text>
-          </View>
-          <View className={styles.item}>
-            记账笔数<Text className={styles.text}>40</Text>
-          </View>
-        </View>
         <List />
+        <Button className={styles.btn} onClick={this.handleLogout}>
+          退出登录
+        </Button>
       </View>
     );
   }

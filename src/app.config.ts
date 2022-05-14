@@ -33,7 +33,14 @@ export default {
   subpackages: [
     {
       root: "packages",
-      pages: ["add/add", "detail/detail", "addDetail/addDetail"],
+      pages: [
+        "add/add",
+        "detail/detail",
+        "addDetail/addDetail",
+        "about/about",
+        "operate/operate",
+        "agreement/agreement",
+      ],
     },
   ],
   window: {
